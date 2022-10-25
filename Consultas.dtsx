@@ -11,8 +11,8 @@
   DTS:LocaleID="3082"
   DTS:ObjectName="Consultas"
   DTS:PackageType="5"
-  DTS:VersionBuild="8"
-  DTS:VersionGUID="{ECC68469-0C47-48B0-99E2-C9DF5C1097C0}">
+  DTS:VersionBuild="9"
+  DTS:VersionGUID="{063F5360-AEEA-482E-8C10-8A78D53DFEAC}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:Variables>
@@ -712,7 +712,7 @@ ON StageMovimientoDetalle.CodigoArticulo = StageInventarioArticulos.CodigoArticu
 INNER JOIN StageEntidades
 ON StageMovimientoEncabezado.CodigoEntidad = StageEntidades.CodigoEntidad
 WHERE StageInventarioArticulos.CodigoArticulo IN ('890201','890701')
-AND BETANIA.dbo.FUX_CALCULAR_EDAD(CONVERT(NUMERIC,REPLACE(CONVERT(VARCHAR,StageUsuarios.FechaNacimiento),'-','')),CONVERT(NUMERIC,REPLACE(CONVERT(VARCHAR,StageMovimientoEncabezado.Fecha),'-','')),'N') &gt; 0</property>
+AND BETANIA.dbo.FUX_CALCULAR_EDAD(CONVERT(NUMERIC,REPLACE(CONVERT(VARCHAR,StageUsuarios.FechaNacimiento),'-','')),CONVERT(NUMERIC,REPLACE(CONVERT(VARCHAR,StageMovimientoEncabezado.Fecha),'-','')),'N') &gt;= 0</property>
                 <property
                   dataType="System.String"
                   description="The variable that contains the SQL command to be executed."
@@ -1268,21 +1268,21 @@ AND BETANIA.dbo.FUX_CALCULAR_EDAD(CONVERT(NUMERIC,REPLACE(CONVERT(VARCHAR,StageU
       <GraphLayout
         Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="200,42"
-          Id="Package\Data Flow Task Consultas\Stage Betania Consultas"
-          TopLeft="357.75,89" />
-        <NodeLayout
           Size="158,42"
           Id="Package\Data Flow Task Consultas\Derived Column"
           TopLeft="378.75,167" />
+        <NodeLayout
+          Size="133,42"
+          Id="Package\Data Flow Task Consultas\Row Count"
+          TopLeft="391.25,245" />
         <NodeLayout
           Size="203,42"
           Id="Package\Data Flow Task Consultas\Datos Abiertos Consultas"
           TopLeft="356.25,323" />
         <NodeLayout
-          Size="133,42"
-          Id="Package\Data Flow Task Consultas\Row Count"
-          TopLeft="391.25,245" />
+          Size="200,42"
+          Id="Package\Data Flow Task Consultas\Stage Betania Consultas"
+          TopLeft="357.75,89" />
         <EdgeLayout
           Id="Package\Data Flow Task Consultas.Paths[Row Count Output 1]"
           TopLeft="457.75,287">
@@ -1405,14 +1405,6 @@ AND BETANIA.dbo.FUX_CALCULAR_EDAD(CONVERT(NUMERIC,REPLACE(CONVERT(VARCHAR,StageU
     </LayoutInfo>
   </DtsEventHandler>
   <PipelineComponentMetadata
-    design-time-name="Package\Data Flow Task Consultas\Stage Betania Consultas">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
     design-time-name="Package\Data Flow Task Consultas\Datos Abiertos Consultas">
     <Properties>
       <Property>
@@ -1422,6 +1414,14 @@ AND BETANIA.dbo.FUX_CALCULAR_EDAD(CONVERT(NUMERIC,REPLACE(CONVERT(VARCHAR,StageU
         <Name>TableInfoObjectType</Name>
         <Value
           type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Data Flow Task Consultas\Stage Betania Consultas">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
       </Property>
     </Properties>
   </PipelineComponentMetadata>

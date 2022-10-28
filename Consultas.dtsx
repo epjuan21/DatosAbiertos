@@ -11,8 +11,8 @@
   DTS:LocaleID="3082"
   DTS:ObjectName="Consultas"
   DTS:PackageType="5"
-  DTS:VersionBuild="9"
-  DTS:VersionGUID="{063F5360-AEEA-482E-8C10-8A78D53DFEAC}">
+  DTS:VersionBuild="12"
+  DTS:VersionGUID="{0EA9874E-8B55-4E86-9B5C-6F035DFD0484}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:Variables>
@@ -400,6 +400,14 @@
                       cachedName="ConceptoProduccion"
                       externalMetadataColumnId="Package\Data Flow Task Consultas\Datos Abiertos Consultas.Inputs[OLE DB Destination Input].ExternalColumns[ConceptoProduccion]"
                       lineageId="Package\Data Flow Task Consultas\Stage Betania Consultas.Outputs[OLE DB Source Output].Columns[ConceptoProduccion]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task Consultas\Datos Abiertos Consultas.Inputs[OLE DB Destination Input].Columns[EsExtranjero]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="EsExtranjero"
+                      externalMetadataColumnId="Package\Data Flow Task Consultas\Datos Abiertos Consultas.Inputs[OLE DB Destination Input].ExternalColumns[EsExtranjero]"
+                      lineageId="Package\Data Flow Task Consultas\Stage Betania Consultas.Outputs[OLE DB Source Output].Columns[EsExtranjero]" />
                   </inputColumns>
                   <externalMetadataColumns
                     isUsed="True">
@@ -502,6 +510,12 @@
                       dataType="str"
                       length="255"
                       name="ConceptoProduccion" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task Consultas\Datos Abiertos Consultas.Inputs[OLE DB Destination Input].ExternalColumns[EsExtranjero]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="EsExtranjero" />
                   </externalMetadataColumns>
                 </input>
               </inputs>
@@ -681,30 +695,31 @@
                   name="SqlCommand"
                   UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SET LANGUAGE 'SPANISH'
 SELECT
-DISTINCT
- StageMovimientoEncabezado.CodigoUsuario
-,'ANTIOQUIA' Departamento
-,'BETANIA' Municipio
-,CONVERT(varchar,StageMovimientoEncabezado.Fecha,111) FechaAtencion
-,DATEPART(YEAR,StageMovimientoEncabezado.Fecha) AñoAtencion
-,DATEPART(MONTH,StageMovimientoEncabezado.Fecha) MesAtencion
-,DATENAME(MONTH,StageMovimientoEncabezado.Fecha) NombreMes
-,StageUsuarios.Sexo
-,CONVERT(varchar,StageUsuarios.FechaNacimiento,111) FechaNacimiento
-,BETANIA.dbo.FUX_CALCULAR_EDAD(CONVERT(NUMERIC,REPLACE(CONVERT(VARCHAR,StageUsuarios.FechaNacimiento),'-','')),CONVERT(NUMERIC,REPLACE(CONVERT(VARCHAR,StageMovimientoEncabezado.Fecha),'-','')),'N') Edad
-,[BETANIA].dbo.FUX_CALCULAR_EDAD(CONVERT(NUMERIC,REPLACE(CONVERT(VARCHAR,StageUsuarios.FechaNacimiento),'-','')),CONVERT(NUMERIC,REPLACE(CONVERT(VARCHAR,StageMovimientoEncabezado.Fecha),'-','')),'U') UnidadEdad
-,StageEntidades.CodigoSupersalud
-,StageEntidades.Nombre NombreEntidad
-,StageEntidades.TipoEntidad Regimen
-,StageMovimientoDetalle.CodigoArticulo CodigoCups
-,StageInventarioArticulos.Descripcion DescripcionCodigoCups
-,CASE StageMovimientoDetalle.CodigoArticulo
-	WHEN '890201' THEN 'CONSULTA DE PRIMERA VEZ POR MEDICINA GENERAL'
-	WHEN '890701' THEN 'CONSULTA DE URGENCIAS POR MEDICINA GENERAL'
+	DISTINCT
+	 StageMovimientoEncabezado.CodigoUsuario
+	,'ANTIOQUIA' Departamento
+	,'BETANIA' Municipio
+	,CONVERT(varchar,StageMovimientoEncabezado.Fecha,111) FechaAtencion
+	,DATEPART(YEAR,StageMovimientoEncabezado.Fecha) AñoAtencion
+	,DATEPART(MONTH,StageMovimientoEncabezado.Fecha) MesAtencion
+	,DATENAME(MONTH,StageMovimientoEncabezado.Fecha) NombreMes
+	,StageUsuarios.Sexo
+	,CONVERT(varchar,StageUsuarios.FechaNacimiento,111) FechaNacimiento
+	,BETANIA.dbo.FUX_CALCULAR_EDAD(CONVERT(NUMERIC,REPLACE(CONVERT(VARCHAR,StageUsuarios.FechaNacimiento),'-','')),CONVERT(NUMERIC,REPLACE(CONVERT(VARCHAR,StageMovimientoEncabezado.Fecha),'-','')),'N') Edad
+	,[BETANIA].dbo.FUX_CALCULAR_EDAD(CONVERT(NUMERIC,REPLACE(CONVERT(VARCHAR,StageUsuarios.FechaNacimiento),'-','')),CONVERT(NUMERIC,REPLACE(CONVERT(VARCHAR,StageMovimientoEncabezado.Fecha),'-','')),'U') UnidadEdad
+	,StageEntidades.CodigoSupersalud
+	,StageEntidades.Nombre NombreEntidad
+	,StageEntidades.TipoEntidad Regimen
+	,StageUsuarios.EsExtranjero
+	,StageMovimientoDetalle.CodigoArticulo CodigoCups
+	,StageInventarioArticulos.Descripcion DescripcionCodigoCups
+	,CASE StageMovimientoDetalle.CodigoArticulo
+		WHEN '890201' THEN 'CONSULTA DE PRIMERA VEZ POR MEDICINA GENERAL'
+		WHEN '890701' THEN 'CONSULTA DE URGENCIAS POR MEDICINA GENERAL'
 	END ConceptoProduccion
 FROM StageMovimientoEncabezado
 LEFT JOIN StageMovimientoDetalle
-ON StageMovimientoEncabezado.NumeroFactura = StageMovimientoDetalle.NumeroFactura
+ON StageMovimientoEncabezado.Factura = StageMovimientoDetalle.Factura
 LEFT JOIN StageUsuarios
 ON StageMovimientoEncabezado.CodigoUsuario = StageUsuarios.CodigoUsuario
 LEFT JOIN StageInventarioArticulos
@@ -930,6 +945,17 @@ AND BETANIA.dbo.FUX_CALCULAR_EDAD(CONVERT(NUMERIC,REPLACE(CONVERT(VARCHAR,StageU
                       lineageId="Package\Data Flow Task Consultas\Stage Betania Consultas.Outputs[OLE DB Source Output].Columns[ConceptoProduccion]"
                       name="ConceptoProduccion"
                       truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task Consultas\Stage Betania Consultas.Outputs[OLE DB Source Output].Columns[EsExtranjero]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task Consultas\Stage Betania Consultas.Outputs[OLE DB Source Output].ExternalColumns[EsExtranjero]"
+                      length="1"
+                      lineageId="Package\Data Flow Task Consultas\Stage Betania Consultas.Outputs[OLE DB Source Output].Columns[EsExtranjero]"
+                      name="EsExtranjero"
+                      truncationRowDisposition="FailComponent" />
                   </outputColumns>
                   <externalMetadataColumns
                     isUsed="True">
@@ -1030,6 +1056,12 @@ AND BETANIA.dbo.FUX_CALCULAR_EDAD(CONVERT(NUMERIC,REPLACE(CONVERT(VARCHAR,StageU
                       dataType="str"
                       length="44"
                       name="ConceptoProduccion" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task Consultas\Stage Betania Consultas.Outputs[OLE DB Source Output].ExternalColumns[EsExtranjero]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="EsExtranjero" />
                   </externalMetadataColumns>
                 </output>
                 <output
@@ -1130,6 +1162,13 @@ AND BETANIA.dbo.FUX_CALCULAR_EDAD(CONVERT(NUMERIC,REPLACE(CONVERT(VARCHAR,StageU
                       length="100"
                       lineageId="Package\Data Flow Task Consultas\Stage Betania Consultas.Outputs[OLE DB Source Error Output].Columns[Regimen]"
                       name="Regimen" />
+                    <outputColumn
+                      refId="Package\Data Flow Task Consultas\Stage Betania Consultas.Outputs[OLE DB Source Error Output].Columns[EsExtranjero]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      lineageId="Package\Data Flow Task Consultas\Stage Betania Consultas.Outputs[OLE DB Source Error Output].Columns[EsExtranjero]"
+                      name="EsExtranjero" />
                     <outputColumn
                       refId="Package\Data Flow Task Consultas\Stage Betania Consultas.Outputs[OLE DB Source Error Output].Columns[CodigoCups]"
                       codePage="1252"
